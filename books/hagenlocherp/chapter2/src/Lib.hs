@@ -41,8 +41,22 @@ indexValue ind xs
     | ind > listLength xs = undefined
 indexValue ind (x : xs) = indexValue (ind - 1) xs
 
+alphabetRot :: Alphabet -> Int -> Char -> Char
+alphabetRot alphabet n ch =
+    indexValue ((indexOf ch alphabet + n) `mod` 26) alphabet
+
 upperRot :: Int -> Char -> Char
-upperRot n ch = indexValue ((indexOf ch upperAlphabet + n) `mod` 26) upperAlphabet
+upperRot n ch = alphabetRot upperAlphabet n ch
 
 lowerRot :: Int -> Char -> Char
-lowerRot n ch = indexValue ((indexOf ch lowerAlphabet + n) `mod` 26) lowerAlphabet
+lowerRot n ch = alphabetRot lowerAlphabet n ch
+
+rotChar :: Int -> Char -> Char
+rotChar n ch
+    | isUpper ch = upperRot n ch
+    | isLower ch = lowerRot n ch
+    | otherwise = ch
+
+caesar :: Int -> String -> String
+caesar n [] = []
+caesar n (x: xs) = rotChar n x : caesar n xs
